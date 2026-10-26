@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kickoff Manager — Prototype</title>
+<style>
+:root{--bg:#07140f;--panel:#10251b;--panel2:#173526;--green:#b8f36b;--muted:#a9c1b1;--line:#294b38;--white:#f4faef;--red:#ff7777;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#153b29,#07140f 58%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--white)}
+header{padding:22px 18px 14px;max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:900;letter-spacing:.3px}.brand span{color:var(--green)}.tag{color:var(--muted);font-size:12px}
+main{max-width:1100px;margin:auto;padding:0 14px 28px}.hero{background:linear-gradient(120deg,#214e35,#10271c);border:1px solid var(--line);border-radius:22px;padding:20px;display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+h1{font-size:clamp(25px,5vw,42px);line-height:1.04;margin:8px 0 12px}.hero p{color:#d0e3d5;margin:0 0 15px;max-width:560px}.pill{display:inline-block;border:1px solid #5c8b66;border-radius:999px;padding:5px 10px;color:var(--green);font-size:11px;font-weight:800;letter-spacing:.6px}
+.heroStats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.statbox,.panel{background:rgba(7,20,15,.65);border:1px solid var(--line);border-radius:15px;padding:14px}.statbox small,.muted{color:var(--muted)}.statbox strong{display:block;font-size:23px;margin-top:4px}
+.tabs{display:flex;gap:8px;overflow:auto;margin:16px 0}.tab,button,select{font:inherit}.tab{background:#10251b;color:var(--muted);border:1px solid var(--line);padding:10px 15px;border-radius:12px;white-space:nowrap;cursor:pointer}.tab.active{background:var(--green);color:#102016;border-color:var(--green);font-weight:800}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.panel{background:linear-gradient(150deg,#11281d,#0b1c13);padding:17px}.panel h2{font-size:18px;margin:0 0 13px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #213c2c}.row:last-child{border-bottom:0}.club{display:flex;align-items:center;gap:10px}.crest{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#244a31;font-size:22px}.club b{display:block}.club small{color:var(--muted)}
+button.primary{background:var(--green);color:#102016;border:0;border-radius:12px;padding:12px 15px;font-weight:850;cursor:pointer}button.secondary{background:#173526;color:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 13px;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+.rating{font-weight:900;color:var(--green)}.bar{height:6px;background:#263d2d;border-radius:99px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:var(--green)}
+select{background:#0b1c13;color:var(--white);border:1px solid var(--line);border-radius:10px;padding:9px;max-width:100%}
+.pitch{background:repeating-linear-gradient(0deg,#1c663d 0px,#1c663d 48px,#1a5d37 48px,#1a5d37 96px);border:2px solid #7ebc82;border-radius:14px;padding:16px;min-height:300px;display:flex;flex-direction:column;justify-content:space-around;position:relative}
+.pitch:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid #a8d3a0}.pitch:after{content:"";position:absolute;width:90px;height:90px;border:1px solid #a8d3a0;border-radius:50%;top:calc(50% - 45px);left:calc(50% - 45px)}
+.lineup{display:flex;justify-content:space-around;position:relative;z-index:1;gap:4px}.playerdot{text-align:center;min-width:38px}.playerdot span{display:grid;place-items:center;background:#f3f7ee;color:#173526;border:2px solid #b8f36b;border-radius:50%;width:30px;height:30px;font-size:10px;font-weight:900;margin:auto}.playerdot small{font-size:10px;text-shadow:0 1px 2px #000;font-weight:700}
+.notice{padding:12px;border-radius:12px;background:#1c3526;border:1px solid #355c40;color:#d9eadb;margin-top:12px}.score{font-size:42px;font-weight:950;text-align:center;letter-spacing:5px}.hidden{display:none}.footer{color:var(--muted);font-size:12px;text-align:center;padding:20px 5px}
+@media(max-width:720px){.hero,.grid{grid-template-columns:1fr}.heroStats{grid-template-columns:repeat(4,1fr)}.statbox{padding:10px}.statbox strong{font-size:18px}.hero{padding:16px}.pitch{min-height:270px}}
+@media(max-width:430px){.heroStats{grid-template-columns:repeat(2,1fr)}header{align-items:flex-start;flex-direction:column}.row{gap:8px}.row button{padding:8px;font-size:12px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">⚽ KICKOFF <span>MANAGER</span></div><div class="tag">FOOTBALL CAREER SIMULATOR · DEMO v0.1</div></div><div class="pill">PROTOTIPE DAPAT DIMAINKAN</div></header>
+<main>
+<section class="hero">
+ <div><div class="pill">MUSIM 2026/27 · PRATINJAU</div><h1>Bangun klubmu.<br>Menangkan liga.</h1><p>Atur skuad, tentukan formasi, kelola transfer, dan simulasikan pertandingan. Ini prototipe awal dengan data contoh—belum berisi database lengkap atau lisensi resmi.</p><button class="primary" onclick="playMatch()">▶ Simulasikan Pertandingan</button></div>
+ <div class="heroStats"><div class="statbox"><small>KLUB</small><strong id="clubStat">Aruna FC</strong></div><div class="statbox"><small>POSISI LIGA</small><strong id="position">4</strong></div><div class="statbox"><small>ANGGARAN</small><strong id="budget">€18.5M</strong></div><div class="statbox"><small>REPUTASI</small><strong>★★★★☆</strong></div></div>
+</section>
+<nav class="tabs"><button class="tab active" data-tab="overview">Ringkasan</button><button class="tab" data-tab="squad">Skuad</button><button class="tab" data-tab="tactics">Taktik</button><button class="tab" data-tab="league">Klasemen</button><button class="tab" data-tab="transfers">Transfer</button></nav>
+<section id="overview" class="tabcontent grid">
+ <div class="panel"><h2>Klub Saya</h2><div class="row"><div class="club"><div class="crest">🛡️</div><div><b id="clubName">Aruna FC</b><small>Liga Nusantara · Indonesia</small></div></div><select id="clubSelect" aria-label="Pilih klub"><option>Aruna FC</option><option>Surabaya Garuda</option><option>Jakarta United</option><option>Bandung Raya</option></select></div><div class="row"><span>Rating skuad</span><strong class="rating" id="teamRating">78 OVR</strong></div><div class="row"><span>Target musim</span><strong>4 besar</strong></div><div class="row"><span>Pertandingan berikutnya</span><strong id="nextMatch">vs Surabaya Garuda</strong></div><div class="notice" id="news">Berita klub: pramusim dimulai. Susun taktik terbaikmu!</div></div>
+ <div class="panel"><h2>Pertandingan Terakhir</h2><div class="muted" style="text-align:center">LIGA NUSANTARA · PEKAN 8</div><div class="score" id="lastScore">— : —</div><div style="text-align:center;font-weight:800" id="lastTeams">Aruna FC vs Surabaya Garuda</div><div class="notice" id="matchReport">Belum ada pertandingan. Tekan “Simulasikan Pertandingan” untuk memulai.</div><div style="display:flex;gap:8px;margin-top:12px"><button class="secondary" onclick="playMatch()">Mainkan laga</button><button class="secondary" onclick="resetSeason()">Reset musim</button></div></div>
+</section>
+<section id="squad" class="tabcontent hidden grid"><div class="panel"><h2>Skuad utama</h2><div id="players"></div></div><div class="panel"><h2>Profil pemain</h2><p class="muted">Pilih pemain untuk melihat atributnya.</p><div id="playerProfile" class="notice">Belum ada pemain dipilih.</div></div></section>
+<section id="tactics" class="tabcontent hidden grid"><div class="panel"><h2>Formasi & strategi</h2><p class="muted">Perubahan formasi memengaruhi kekuatan simulasi.</p><div class="row"><label for="formation">Formasi</label><select id="formation"><option value="4-3-3">4-3-3 Menyerang</option><option value="4-2-3-1">4-2-3-1 Seimbang</option><option value="3-5-2">3-5-2 Penguasaan</option><option value="5-3-2">5-3-2 Bertahan</option></select></div><div class="row"><label for="mentality">Mentalitas</label><select id="mentality"><option value="balanced">Seimbang</option><option value="attack">Menyerang</option><option value="defend">Bertahan</option></select></div><div class="row"><label for="tempo">Tempo permainan</label><select id="tempo"><option value="normal">Normal</option><option value="high">Tinggi</option><option value="low">Rendah</option></select></div><button class="primary" onclick="saveTactics()">Simpan taktik</button><div class="notice" id="tacticMsg">Taktik saat ini: 4-3-3 · Seimbang · Tempo normal</div></div><div class="panel"><h2>Visualisasi formasi</h2><div class="pitch" id="pitch"></div></section>
+<section id="league" class="tabcontent hidden"><div class="panel"><h2>Klasemen Liga Nusantara</h2><div id="table"></div></div></section>
+<section id="transfers" class="tabcontent hidden grid"><div class="panel"><h2>Daftar transfer</h2><p class="muted">Pemain contoh untuk menguji alur transfer. Data ini bukan data pasar nyata.</p><div id="market"></div></div><div class="panel"><h2>Anggaran & aktivitas</h2><div class="row"><span>Anggaran tersisa</span><strong class="rating" id="budget2">€18.5M</strong></div><div class="notice" id="transferMsg">Pilih pemain di pasar untuk merekrutnya.</div></div></section>
+<div class="footer">Prototipe konsep independen. Bukan produk resmi Superkickoff. Nama, logo, foto pemain, badge klub, dan data liga nyata perlu ditinjau hak penggunaan/lisensinya sebelum publikasi.</div>
+</main>
+<script>
+const basePlayers=[
+{name:"Raka Pratama",pos:"GK",ovr:79,pace:52,shoot:20,pass:64,dribble:41,def:78,physical:76,value:2.4},
+{name:"Dimas Saputra",pos:"RB",ovr:76,pace:81,shoot:48,pass:70,dribble:69,def:74,physical:72,value:3.1},
+{name:"Bima Wicaksono",pos:"CB",ovr:80,pace:65,shoot:35,pass:67,dribble:52,def:83,physical:84,value:4.2},
+{name:"Rizky Mahendra",pos:"CB",ovr:78,pace:68,shoot:38,pass:71,dribble:56,def:80,physical:79,value:3.6},
+{name:"Fajar Hidayat",pos:"LB",ovr:75,pace:82,shoot:45,pass:69,dribble:73,def:72,physical:70,value:2.8},
+{name:"Andra Putra",pos:"CM",ovr:81,pace:72,shoot:70,pass:84,dribble:78,def:69,physical:73,value:5.8},
+{name:"Bagas Firmansyah",pos:"DM",ovr:79,pace:66,shoot:52,pass:77,dribble:67,def:81,physical:82,value:4.9},
+{name:"Ilham Kurnia",pos:"AM",ovr:83,pace:79,shoot:78,pass:82,dribble:85,def:48,physical:68,value:7.2},
+{name:"Yoga Ramadhan",pos:"RW",ovr:82,pace:90,shoot:79,pass:74,dribble:87,def:38,physical:65,value:7.5},
+{name:"Rafi Alamsyah",pos:"ST",ovr:84,pace:83,shoot:88,pass:66,dribble:81,def:30,physical:80,value:9.0},
+{name:"Kevin Santoso",pos:"LW",ovr:80,pace:88,shoot:76,pass:72,dribble:84,def:36,physical:63,value:6.2},
+{name:"Naufal Akbar",pos:"CM",ovr:75,pace:70,shoot:65,pass:76,dribble:72,def:65,physical:71,value:2.9}
+];
+const marketPlayers=[{name:"Mikael Santos",pos:"ST",ovr:86,pace:84,shoot:89,pass:70,dribble:83,def:28,physical:82,value:11.5},{name:"Leo Wijaya",pos:"RW",ovr:82,pace:91,shoot:78,pass:75,dribble:86,def:39,physical:66,value:7.2},{name:"Arman Koto",pos:"CB",ovr:80,pace:68,shoot:34,pass:68,dribble:52,def:84,physical:85,value:5.4},{name:"Daffa Malik",pos:"GK",ovr:78,pace:48,shoot:18,pass:61,dribble:38,def:79,physical:75,value:3.2}];
+let players=basePlayers.map(x=>({...x})), budget=18.5, played=0, wins=0, draws=0, losses=0, points=0, teamName="Aruna FC", tactics={formation:"4-3-3",mentality:"balanced",tempo:"normal"};
+let clubs=[{name:"Jakarta United",rating:82,pts:18},{name:"Bandung Raya",rating:80,pts:16},{name:"Surabaya Garuda",rating:79,pts:15},{name:"Aruna FC",rating:78,pts:14},{name:"Makassar Mariners",rating:74,pts:11},{name:"Medan Athletic",rating:72,pts:9}];
+function money(v){return "€"+v.toFixed(1)+"M"}
+function renderPlayers(){document.getElementById("players").innerHTML=players.map((p,i)=>`<div class="row"><div class="club"><div class="crest">${p.pos==="GK"?"🧤":p.pos==="ST"?"⚽":"👕"}</div><div><b>${p.name}</b><small>${p.pos} · Nilai ${money(p.value)}</small></div></div><button class="secondary" onclick="profile(${i})">${p.ovr} OVR</button></div>`).join("")}
+function profile(i){let p=players[i];document.getElementById("playerProfile").innerHTML=`<b>${p.name}</b> · ${p.pos}<div style="font-size:30px;font-weight:900;color:var(--green)">${p.ovr} OVR</div>`+["pace","shoot","pass","dribble","def","physical"].map(k=>`<div style="margin:9px 0;text-transform:capitalize">${k==="def"?"defending":k==="physical"?"fisik":k==="shoot"?"tembakan":k==="pass"?"umpan":k==="pace"?"kecepatan":k} <b style="float:right">${p[k]}</b><div class="bar"><i style="width:${p[k]}%"></i></div></div>`).join("")}
+function renderPitch(){let f=tactics.formation;let lines=f==="4-3-3"?[["Rafi","Yoga","Kevin"],["Ilham","Andra","Bagas"],["Fajar","Bima","Rizky","Dimas"],["Raka"]]:f==="4-2-3-1"?[["Rafi"],["Yoga","Ilham","Kevin"],["Andra","Bagas"],["Fajar","Bima","Rizky","Dimas"],["Raka"]]:f==="3-5-2"?[["Rafi","Naufal"],["Yoga","Ilham","Andra","Bagas","Kevin"],["Bima","Rizky","Dimas"],["Raka"]]:[["Rafi","Naufal"],["Ilham","Andra","Bagas"],["Fajar","Bima","Rizky","Dimas","Bima"],["Raka"]];document.getElementById("pitch").innerHTML=lines.map(line=>`<div class="lineup">${line.map(n=>`<div class="playerdot"><span>${n.slice(0,2).toUpperCase()}</span><small>${n}</small></div>`).join("")}</div>`).join("")}
+function renderTable(){let all=[...clubs.filter(c=>c.name!==teamName),{name:teamName,rating:Math.round(players.reduce((s,p)=>s+p.ovr,0)/players.length),pts:14+points}].sort((a,b)=>b.pts-a.pts);document.getElementById("table").innerHTML=`<div class="row muted"><span>KLUB</span><span>PTS · OVR</span></div>`+all.map((c,i)=>`<div class="row"><div class="club"><div class="crest">${i+1}</div><div><b>${c.name}</b><small>${i===0?"Zona juara":i>3?"Papan tengah":"Persaingan papan atas"}</small></div></div><b>${c.pts} · ${c.rating}</b></div>`).join("")}
+function renderMarket(){document.getElementById("market").innerHTML=marketPlayers.map((p,i)=>`<div class="row"><div class="club"><div class="crest">✚</div><div><b>${p.name}</b><small>${p.pos} · ${p.ovr} OVR · ${money(p.value)}</small></div></div><button class="secondary" onclick="buy(${i})" ${budget<p.value?"disabled":""}>Rekrut</button></div>`).join("")}
+function updateStats(){document.getElementById("budget").textContent=money(budget);document.getElementById("budget2").textContent=money(budget);document.getElementById("clubStat").textContent=teamName;document.getElementById("clubName").textContent=teamName;document.getElementById("teamRating").textContent=Math.round(players.reduce((s,p)=>s+p.ovr,0)/players.length)+" OVR";document.getElementById("position").textContent=Math.max(1,6-Math.floor((points+14)/8));document.getElementById("nextMatch").textContent="vs "+clubs.find(c=>c.name!==teamName)?.name}
+function playMatch(){let avg=players.reduce((s,p)=>s+p.ovr,0)/players.length;let bonus=tactics.mentality==="attack"?3:tactics.mentality==="defend"?-1:1;bonus+=tactics.tempo==="high"?1:tactics.tempo==="low"?-1:0;let ours=Math.max(.15,avg+bonus+(Math.random()*15-7))/100, theirs=.73+Math.random()*.13;let gf=Math.max(0,Math.round(Math.random()*3+ours*2.5-1)),ga=Math.max(0,Math.round(Math.random()*3+theirs*2.2-1));if(Math.random()<.12)gf++;if(Math.random()<.12)ga++;played++;if(gf>ga){wins++;points+=3}else if(gf===ga){draws++;points++}else losses++;let opponent=clubs.find(c=>c.name!==teamName)?.name||"Rival FC";document.getElementById("lastScore").textContent=gf+" : "+ga;document.getElementById("lastTeams").textContent=teamName+" vs "+opponent;let reports=gf>ga?["Kemenangan! Taktik berjalan efektif.","Tiga poin penting diraih tim.","Skuad tampil solid dan mengamankan kemenangan."]:gf===ga?["Laga berakhir imbang. Evaluasi peluang yang terbuang.","Satu poin didapat setelah pertandingan ketat."]:["Kekalahan. Pertimbangkan perubahan formasi.","Lawan lebih efektif memanfaatkan peluang.","Perlu evaluasi pertahanan untuk laga berikutnya."];document.getElementById("matchReport").textContent=reports[Math.floor(Math.random()*reports.length)]+` (simulasi: ${gf} gol untuk tim, ${ga} gol lawan).`;document.getElementById("news").textContent=`Laporan pekan ${played}: ${gf>ga?"menang":gf===ga?"imbang":"kalah"} ${gf}–${ga}. Rekor: ${wins}M ${draws}S ${losses}K.`;renderTable();updateStats()}
+function saveTactics(){tactics.formation=document.getElementById("formation").value;tactics.mentality=document.getElementById("mentality").value;tactics.tempo=document.getElementById("tempo").value;document.getElementById("tacticMsg").textContent=`Taktik tersimpan: ${tactics.formation} · ${tactics.mentality==="attack"?"Menyerang":tactics.mentality==="defend"?"Bertahan":"Seimbang"} · tempo ${tactics.tempo}.`;renderPitch()}
+function buy(i){let p=marketPlayers[i];if(budget<p.value)return;budget-=p.value;players.push({...p});marketPlayers.splice(i,1);document.getElementById("transferMsg").textContent=`${p.name} resmi direkrut dengan biaya ${money(p.value)} (demo).`;renderMarket();renderPlayers();updateStats()}
+function resetSeason(){played=wins=draws=losses=points=0;document.getElementById("lastScore").textContent="— : —";document.getElementById("lastTeams").textContent=teamName+" vs Surabaya Garuda";document.getElementById("matchReport").textContent="Musim direset. Siap memulai lagi.";document.getElementById("news").textContent="Pramusim dimulai. Susun taktik terbaikmu!";renderTable();updateStats()}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".tabcontent").forEach(x=>x.classList.toggle("hidden",x.id!==b.dataset.tab))}));
+document.getElementById("clubSelect").addEventListener("change",e=>{teamName=e.target.value;document.getElementById("news").textContent=`Kamu sekarang menangani ${teamName}. Semoga sukses musim ini!`;updateStats();renderTable()});
+renderPlayers();renderPitch();renderTable();renderMarket();updateStats();
+</script>
+
+<style>
+#accountPanel{max-width:1100px;margin:0 auto 14px;padding:14px;border:1px solid #294b38;border-radius:16px;background:#0c2016}
+#accountPanel input{width:100%;min-width:0;background:#07140f;color:#f4faef;border:1px solid #294b38;border-radius:9px;padding:10px;margin:5px 0}
+#accountPanel .accountgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#accountPanel .accountactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+#accountPanel small{color:#a9c1b1}
+@media(max-width:520px){#accountPanel .accountgrid{grid-template-columns:1fr}}
+</style>
+<section id="accountPanel">
+ <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+  <div><b>☁️ Akun & penyimpanan online</b><br><small>Hubungkan ke server milikmu melalui API_URL.</small></div>
+  <span id="accountStatus" class="pill">Belum terhubung</span>
+ </div>
+ <div class="accountgrid">
+  <input id="apiBase" placeholder="URL API, contoh: https://api.domainkamu.com" aria-label="URL API">
+  <input id="accountEmail" type="email" placeholder="Email" autocomplete="email" aria-label="Email">
+  <input id="accountPassword" type="password" placeholder="Kata sandi (min. 8 karakter)" autocomplete="current-password" aria-label="Kata sandi">
+ </div>
+ <div class="accountactions">
+  <button class="secondary" onclick="kmAuth('register')">Buat akun</button>
+  <button class="secondary" onclick="kmAuth('login')">Masuk</button>
+  <button class="secondary" onclick="kmSyncSave()">Simpan karier ke cloud</button>
+  <button class="secondary" onclick="kmLoadSave()">Muat karier dari cloud</button>
+  <button class="secondary" onclick="kmLogout()">Keluar</button>
+ </div>
+ <div id="accountMessage" class="notice" style="margin-top:9px">Mode demo lokal tetap dapat dimainkan. Fitur online aktif setelah server disiapkan dan URL API diisi.</div>
+</section>
+<script>
+const KM_TOKEN_KEY = "kickoff_manager_token";
+function kmApiBase(){return (document.getElementById("apiBase").value||localStorage.getItem("kickoff_manager_api")||"").trim().replace(/\/+$/,"")}
+function kmSetMessage(msg,ok=false){document.getElementById("accountMessage").textContent=msg;document.getElementById("accountStatus").textContent=ok?"Terhubung":"Status akun"}
+function kmToken(){return localStorage.getItem(KM_TOKEN_KEY)||""}
+async function kmRequest(path,opts={}) {
+ const base=kmApiBase(); if(!base) throw new Error("Isi URL API server terlebih dahulu.");
+ localStorage.setItem("kickoff_manager_api",base);
+ const headers={"Content-Type":"application/json",...(opts.headers||{})};
+ if(kmToken()) headers.Authorization="Bearer "+kmToken();
+ let res; try {res=await fetch(base+path,{...opts,headers})} catch(e){throw new Error("Tidak dapat menghubungi server. Periksa URL, koneksi, dan konfigurasi CORS.")}
+ const data=await res.json().catch(()=>({}));
+ if(!res.ok) throw new Error(data.error||"Permintaan gagal ("+res.status+").");
+ return data;
+}
+async function kmAuth(action){
+ const email=document.getElementById("accountEmail").value.trim(), password=document.getElementById("accountPassword").value;
+ if(!email||!password){kmSetMessage("Masukkan email dan kata sandi.");return}
+ try {const data=await kmRequest("/api/auth/"+action,{method:"POST",body:JSON.stringify({email,password})});
+ localStorage.setItem(KM_TOKEN_KEY,data.token); kmSetMessage((action==="register"?"Akun dibuat":"Berhasil masuk")+" sebagai "+data.user.email+".",true);
+ }catch(e){kmSetMessage(e.message)}
+}
+function kmGetSave(){return {version:1,clubName:typeof teamName==="string"?teamName:"Aruna FC",budget:typeof budget==="number"?budget:18.5,played:typeof played==="number"?played:0,points:typeof points==="number"?points:0,players:typeof players!=="undefined"?players:[],tactics:typeof tactics!=="undefined"?tactics:{},savedAt:new Date().toISOString()}}
+async function kmSyncSave(){
+ try {await kmRequest("/api/save",{method:"PUT",body:JSON.stringify({save:kmGetSave()})});kmSetMessage("Karier berhasil disimpan ke server.",true)}
+ catch(e){kmSetMessage(e.message)}
+}
+async function kmLoadSave(){
+ try {const data=await kmRequest("/api/save",{method:"GET"});if(!data.save){kmSetMessage("Belum ada simpanan cloud untuk akun ini.");return}
+ const s=data.save;
+ if(typeof s.clubName==="string"&&typeof teamName!=="undefined"){teamName=s.clubName;const el=document.getElementById("clubSelect");if(el)el.value=teamName}
+ if(typeof s.budget==="number"&&typeof budget!=="undefined")budget=s.budget;
+ if(Array.isArray(s.players)&&typeof players!=="undefined")players=s.players;
+ if(s.tactics&&typeof tactics!=="undefined")tactics=s.tactics;
+ if(typeof s.played==="number"&&typeof played!=="undefined")played=s.played;
+ if(typeof s.points==="number"&&typeof points!=="undefined")points=s.points;
+ if(typeof renderPlayers==="function")renderPlayers();if(typeof renderPitch==="function")renderPitch();if(typeof updateStats==="function")updateStats();if(typeof renderTable==="function")renderTable();
+ kmSetMessage("Simpanan cloud dimuat. Periksa skuad dan status karier.",true)
+ }catch(e){kmSetMessage(e.message)}
+}
+function kmLogout(){localStorage.removeItem(KM_TOKEN_KEY);kmSetMessage("Token akun dihapus dari perangkat.")}
+(function(){const a=localStorage.getItem("kickoff_manager_api");if(a)document.getElementById("apiBase").value=a;if(kmToken())document.getElementById("accountStatus").textContent="Token tersimpan";})();
+</script>
+
+</body></html>
